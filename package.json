@@ -1,0 +1,17 @@
+{
+  "name": "pra-surdo-ouvir-stream",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/Novatics/pra-surdo-ouvir-stream.git",
+  "author": "Vinicius <viniciusf.arants@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/speech": "^2.1.1",
+    "express": "^4.16.4",
+    "nodemon": "^1.18.9",
+    "socket.io": "^2.2.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
