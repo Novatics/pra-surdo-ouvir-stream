@@ -1,15 +1,12 @@
-const express = require('express');
-const app = express();
 const path = require('path');
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')();
 
 const speechToTextUtils = require('./util/speechToTextUtils');
 
 io.on('connection', function (socket) {
   socket.on('startGoogleCloudStream', function(request) {
     console.log('Receiving audio binary.');
-    speechToTextUtils.startRecognitionStream(socket, null, request);
+    speechToTextUtils.startRecognitionStream(io, null, request);
   });
   // Receive audio data
   socket.on('binaryAudioData', function(data) {
@@ -25,6 +22,6 @@ io.on('connection', function (socket) {
 
 const port = process.env.PORT || 5000;
 
-http.listen(port);
+io.listen(port);
 
 console.log(`Pra surdo ouvir streaming on ${port}`);

@@ -22,20 +22,23 @@ module.exports = {
             }); // Creates a client
           }
         }
-        recognizeStream = speechClient.streamingRecognize(request)
+        recognizeStream = speechClient.streamingRecognize(request.googleApi)
             .on('error', (err) => {
+              console.log(err)
                 console.error('Error when processing audio: ' + (err && err.code ? 'Code: ' + err.code + ' ' : '') + (err && err.details ? err.details : ''));
-                client.emit('googleCloudStreamError', err);
                 this.stopRecognitionStream();
+                if(err.code === 11) {
+                  console.log(request.googleApi)
+                  this.startRecognitionStream(client, GCSServiceAccount, request.googleApi);
+                }
             })
             .on('data', (data) => {
-                client.emit('speechData', data);
-
+                client.emit(`speechData-${request.id}`, data);
                 // if end of utterance, let's restart stream
                 // this is a small hack. After 65 seconds of silence, the stream will still throw an error for speech length limit
                 if (data.results[0] && data.results[0].isFinal) {
                     this.stopRecognitionStream();
-                    this.startRecognitionStream(client, GCSServiceAccount, request);
+                    this.startRecognitionStream(client, GCSServiceAccount, request.googleApi);
                     // console.log('restarted stream serverside');
                 }
             });
